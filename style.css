@@ -6,8 +6,9 @@
 }
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
+html,body{height:100%}
 body{
-  margin:0;min-height:100vh;min-height:100dvh;background:var(--bg);color:#fff;
+  margin:0;height:100vh;height:100dvh;overflow:hidden;background:var(--bg);color:#fff;
   font-family:var(--font);overflow-x:hidden;-webkit-tap-highlight-color:transparent;
 }
 /* fabric-like drapery background, animated with transform only (compositor) */
@@ -22,35 +23,37 @@ body{
 @keyframes drift{to{transform:translate3d(0,160px,0)}}
 @keyframes glow{50%{opacity:.45}}
 
-.wrap{max-width:480px;margin:0 auto;padding:max(32px,env(safe-area-inset-top)) 20px 28px}
+/* exactly one screen tall: everything scales with viewport height */
+.wrap{max-width:480px;margin:0 auto;height:100vh;height:100dvh;display:flex;flex-direction:column;justify-content:center;
+  padding:max(14px,env(safe-area-inset-top)) 20px max(14px,env(safe-area-inset-bottom))}
 
 /* profile */
 .profile{text-align:center}
-.logo-ring{position:relative;width:168px;height:168px;margin:8px auto 0;border-radius:50%;
+.logo-ring{--s:clamp(84px,21dvh,168px);position:relative;width:var(--s);height:var(--s);padding:4px;margin:0 auto;border-radius:50%;
   display:grid;place-items:center;animation:float 5s ease-in-out infinite}
 .logo-ring::before{content:"";position:absolute;inset:0;border-radius:50%;
   background:conic-gradient(from 0deg,var(--gold-lo),var(--gold-hi),var(--gold-lo),var(--gold),var(--gold-lo));
   animation:spin 8s linear infinite}
 .logo-ring::after{content:"";position:absolute;inset:0;border-radius:50%;z-index:-1;
   box-shadow:0 0 44px 8px rgba(233,196,106,.3);animation:pulse 3s ease-in-out infinite}
-.logo{width:160px;height:160px;border-radius:50%;display:block;position:relative;z-index:1}
+.logo{width:100%;height:100%;border-radius:50%;display:block;position:relative;z-index:1}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes float{50%{transform:translateY(-8px)}}
 @keyframes pulse{50%{opacity:.35;transform:scale(1.04)}}
 
-.title{margin:22px 0 0;font-size:1.7rem;line-height:1.3;font-weight:700;letter-spacing:.5px;
+.title{margin:clamp(10px,2.6dvh,22px) 0 0;font-size:clamp(1.25rem,3.6dvh,1.7rem);line-height:1.3;font-weight:700;letter-spacing:.5px;
   background:linear-gradient(100deg,var(--gold-lo) 0%,var(--gold-hi) 45%,var(--gold) 55%,var(--gold-lo) 100%);
   background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
   animation:sheen 6s linear infinite}
 @keyframes sheen{to{background-position:-220% 0}}
-.hint{margin:10px 0 0;color:#f3dca0;font-size:1rem;display:flex;align-items:center;justify-content:center;gap:8px;min-height:28px}
+.hint{margin:clamp(4px,1.2dvh,10px) 0 0;color:#f3dca0;font-size:1rem;display:flex;align-items:center;justify-content:center;gap:8px;min-height:28px}
 .arrow{color:var(--gold);animation:nudge 1.4s ease-in-out infinite}
 @keyframes nudge{50%{transform:translateY(5px)}}
 
 /* links */
-.links{display:flex;flex-direction:column;gap:20px;margin-top:30px;padding-inline-end:10px}
-.btn{position:relative;display:flex;align-items:center;direction:ltr;min-height:60px;
-  padding:7px 8px;border-radius:999px;border:2px solid var(--gold);background:var(--card);
+.links{display:flex;flex-direction:column;gap:clamp(10px,2.6dvh,20px);margin-top:clamp(12px,3.6dvh,30px);padding-inline-end:10px}
+.btn{position:relative;display:flex;align-items:center;direction:ltr;min-height:clamp(44px,7.6dvh,60px);
+  padding:6px 8px;border-radius:999px;border:2px solid var(--gold);background:var(--card);
   color:#fff;text-decoration:none;isolation:isolate;
   box-shadow:10px 8px 0 0 #8a5e18;transition:transform .18s ease,box-shadow .18s ease;
   opacity:0;animation:rise .7s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(.15s + var(--i)*.09s)}
@@ -64,9 +67,10 @@ body{
 .btn:focus-visible{outline:3px solid var(--gold-hi);outline-offset:4px}
 @keyframes rise{from{opacity:0;transform:translateY(26px) scale(.97)}to{opacity:1;transform:none}}
 
-.ico{flex:none;width:46px;height:46px;border-radius:50%;border:2px solid var(--gold);display:grid;place-items:center;color:var(--gold-hi);
+.ico{flex:none;width:clamp(36px,5.8dvh,46px);height:clamp(36px,5.8dvh,46px);border-radius:50%;border:2px solid var(--gold);display:grid;place-items:center;color:var(--gold-hi);
   background:radial-gradient(circle at 30% 30%,rgba(233,196,106,.22),transparent 70%)}
-.label{flex:1;text-align:center;font-size:1.05rem;padding-inline:8px 54px;display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap}
+.label{flex:1;text-align:center;font-size:1.05rem;padding-inline:8px 54px;display:flex;justify-content:center;align-items:center;gap:8px;white-space:nowrap}
+@media (max-width:360px){.label{font-size:.94rem;padding-inline:4px 40px;gap:5px}}
 .num{color:var(--gold);font-weight:600;letter-spacing:.4px}
 
 /* shine sweep running periodically on each button */
@@ -90,13 +94,14 @@ body{
 .btn-tt:hover{border-color:#fff}
 .btn-tt:hover{box-shadow:-4px 4px 0 0 #25f4ee,10px 8px 0 0 #fe2c55}
 
-.foot{direction:ltr;margin-top:44px;text-align:center;color:rgba(243,220,160,.55);font-size:.8rem;min-height:20px}
 
-@media (min-width:640px){
-  .wrap{padding-top:56px}
-  .title{font-size:2rem}
-}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
   .btn{opacity:1}
+}
+
+/* very short landscape screens: only here fall back to scrolling so nothing is cut */
+@media (max-height:430px){
+  body{overflow-y:auto;height:auto;min-height:100dvh}
+  .wrap{height:auto;min-height:100dvh}
 }

@@ -1,9 +1,5 @@
 (() => {
   'use strict';
-  // year
-  const y = document.getElementById('y');
-  if (y) y.textContent = new Date().getFullYear();
-
   // pointer-follow glow on buttons (rAF-throttled, passive => no INP cost)
   const links = document.querySelector('.links');
   if (!links || !matchMedia('(hover:hover)').matches) return;
